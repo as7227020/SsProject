@@ -552,7 +552,7 @@ namespace Stock
             {
                 //大概每30分鐘廣播一次
                 m_countMsg = 1;
-                LineNotice.SendMessageToLineTake(_nowTime + " 監測啟動...(定時通知)");
+                LineNotice.SendMessageToLineTake(_nowTime + " "+ GetRunTime());
             }
 
 
