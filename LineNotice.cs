@@ -20,6 +20,7 @@ namespace Stock
         /// <param name="iMessage"></param>
         public static void SendMessageToLineTake(string iMessage)
         {
+            return;
             string _str = "https://notify-api.line.me/api/notify?status=200&message=" + iMessage;
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(_str);
             request.Method = "POST";

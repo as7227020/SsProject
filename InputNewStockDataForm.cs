@@ -18,6 +18,7 @@ namespace Stock
             InitializeComponent();
             label4.Text = "請輸入監測資料!";
             button2.Text = TES;
+            label5.Text = "";
         }
 
         private void textBox2_TextChanged(object sender, EventArgs e)
@@ -99,14 +100,16 @@ namespace Stock
 
         private void textBox1_Leave(object sender, EventArgs e)
         {
-            NetModule.GetMarketType(textBox1.Text, (_str) => {
+            NetModule.GetMarketType(textBox1.Text, (_str,str2) => {
                 if (_str == "tse")
                 {
                     button2.Text = TES;
+                    label5.Text = str2;
                 }
                 else
                 {
                     button2.Text = OTC;
+                    label5.Text = str2;
                 }
             });
            

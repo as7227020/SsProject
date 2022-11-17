@@ -41,9 +41,21 @@ namespace Stock
             m_ShowMessage = false;
         }
 
+        void MenuExit_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
+        }
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            //m_notifyIconList = new List<string>();
+            notifyIcon1.ContextMenuStrip = new ContextMenuStrip();
+            notifyIcon1.ContextMenuStrip.Items.Add("執行", null, button2_Click);
+            notifyIcon1.ContextMenuStrip.Items.Add("訊息OFF", null, button1_Click);
+            notifyIcon1.ContextMenuStrip.Items.Add("輸入監測資料", null, button3_Click);
+            notifyIcon1.ContextMenuStrip.Items.Add("關閉程式", null, MenuExit_Click);
+
+
             InitMessgaeToOFF();
             m_Progrss = "";
             m_countMsg = 0;
@@ -479,7 +491,7 @@ namespace Stock
             watchTimer.Elapsed += WatchTimer_Elapsed;
             watchTimer.AutoReset = true;
             watchTimer.Enabled = true;
-            button2.Text = "開始";
+            button2.Text = RUN_START;
 
         }
 
@@ -710,8 +722,6 @@ namespace Stock
             }
         }
 
-
-
         class UpdateData
         {
             /// <summary>
@@ -748,11 +758,8 @@ namespace Stock
                     Dic_ColumnData.Add(iKey, iDefaultValue);
                     return iDefaultValue;
                 }
-
                 return Dic_ColumnData[iKey];
-
             }
-
         }
 
         /// <summary>
@@ -767,20 +774,25 @@ namespace Stock
             UpdateWatchStr();
             UpdateWatchTable();
             StartWatch();
-            button2.Text = "停止";
+            button2.Text = RUN_STOP;
         }
+
+        const string RUN_START = "開始";
+        const string RUN_STOP = "停止";
 
         private void button2_Click(object sender, EventArgs e)
         {
-
+            
             if (m_WatchState == false)
             {
-                button2.Text = "停止";
+                notifyIcon1.ContextMenuStrip.Items[0].Text = RUN_STOP;
+                button2.Text = RUN_STOP;
                 StartWatch();
             }
             else
             {
-                button2.Text = "開始";
+                notifyIcon1.ContextMenuStrip.Items[0].Text = RUN_START;
+                button2.Text = RUN_START;
                 StopWatch();
             }
         }
@@ -884,6 +896,7 @@ namespace Stock
         {
             if (button1.Text == "訊息OFF")
             {
+                notifyIcon1.ContextMenuStrip.Items[1].Text = "訊息ON";
                 button1.Text = "訊息ON";
                 m_ShowMessage = true;
                 //開啟黑窗
@@ -892,6 +905,7 @@ namespace Stock
             else
             {
                 button1.Text = "訊息OFF";
+                notifyIcon1.ContextMenuStrip.Items[1].Text = "訊息OFF";
                 m_ShowMessage = false;
                 FreeConsole();
             }

@@ -17,7 +17,7 @@ namespace MyTest
         /// </summary>
         /// <param name="iCode"></param>
         /// <returns></returns>
-        public static void GetMarketType(string iCode , Action<string> iCallBack)
+        public static void GetMarketType(string iCode , Action<string,string> iCallBack)
         {
             string url = "https://mis.twse.com.tw/stock/api/getStockNames.jsp?n=" + iCode;
 
@@ -35,7 +35,7 @@ namespace MyTest
         }
 
 
-      static void ParseMarketType(string iGetStr , Action<string> iCallBack)
+      static void ParseMarketType(string iGetStr , Action<string,string> iCallBack)
         {
             JObject _nodeContainFileList_JObject = JsonConvert.DeserializeObject<JObject>(iGetStr.Trim());
             // var _termsHashJObj = _nodeContainFileList_JObject[RPS_ProjectSettings.termsFileName];
@@ -62,8 +62,8 @@ namespace MyTest
                             //公司名稱 (短)
                             string _name = Jobj["n"].ToString();
 
-                            iCallBack( _type[0]);
-
+                            iCallBack( _type[0], _name);
+                            break;
                         }
                         break;
                     }
