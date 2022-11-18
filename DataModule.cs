@@ -157,6 +157,21 @@ namespace Stock
             OleDbInsertUpdateDelete("StockDB.mdb", cmd);
         }
 
+        /// <summary>
+        /// 監測資料 更新 移除觀察 資料
+        /// </summary>
+        /// <param name="iOrder"></param>
+        /// <param name="iIsSimulation"></param>
+        /// <param name="iIsRemove"></param>
+        public static void UpdateWatchDB_ChangeWatchState(string iOrder,  bool iIsRemove)
+        {
+            OleDbCommand cmd = new OleDbCommand();
+            cmd.CommandText = "UPDATE WatchStockClass SET 移除觀察 = (@移除觀察) WHERE (單號)" + " = (@單號)";
+            cmd.Parameters.AddWithValue("@移除觀察", iIsRemove == true ? 1 : 0);
+            cmd.Parameters.AddWithValue("@單號", iOrder);
+            OleDbInsertUpdateDelete("StockDB.mdb", cmd);
+        }
+
         public static DataTable GetWatchDB_AllData()
         {
             string sql = "select * from WatchStockClass";
@@ -179,12 +194,19 @@ namespace Stock
             return dt;
         }
 
-        public static bool CheckWatchDB_HasData(string iColName, string iCode)
+        /// <summary>
+        /// 檢查WatchStockClass是否有相關資料
+        /// </summary>
+        /// <param name="iColName">欄位名稱</param>
+        /// <param name="iColData">欄位資料</param>
+        /// <param name="iState">觀察中是與否</param>
+        /// <returns></returns>
+        public static bool CheckWatchDB_HasData(string iColName, string iColData, bool iState = false)
         {
-            DataTable _dataTable = GetWatchDB_RealyWatchData(false);
+            DataTable _dataTable = GetWatchDB_RealyWatchData(iState);
             foreach (DataRow row in _dataTable.Rows)
             {
-                if (iCode ==  row[iColName].ToString())
+                if (iColData ==  row[iColName].ToString())
                 {
                     return true;
                 }

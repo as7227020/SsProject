@@ -60,7 +60,7 @@ namespace Stock
             if (DataModule.CheckWatchDB_HasData("代碼",watchStockClass.Code) == false)
             {
                 DataModule.AddWatchStockClass(watchStockClass);
-                label4.Text = "增加成功!";
+                label4.Text = label5.Text  + " 增加成功!";
                 textBox1.Text = "";
                 textBox2.Text = "";
                 textBox3.Text = "";

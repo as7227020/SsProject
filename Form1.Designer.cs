@@ -59,6 +59,7 @@
             this.radioButton1 = new System.Windows.Forms.RadioButton();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
+            this.button9 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.watchStockClassBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).BeginInit();
@@ -250,7 +251,7 @@
             // 
             this.label7.AutoSize = true;
             this.label7.Font = new System.Drawing.Font("Microsoft JhengHei UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.label7.Location = new System.Drawing.Point(688, 47);
+            this.label7.Location = new System.Drawing.Point(680, 32);
             this.label7.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(49, 20);
@@ -259,7 +260,7 @@
             // 
             // textBox2
             // 
-            this.textBox2.Location = new System.Drawing.Point(733, 47);
+            this.textBox2.Location = new System.Drawing.Point(733, 33);
             this.textBox2.Margin = new System.Windows.Forms.Padding(2);
             this.textBox2.Name = "textBox2";
             this.textBox2.Size = new System.Drawing.Size(47, 23);
@@ -267,7 +268,7 @@
             // 
             // button7
             // 
-            this.button7.Location = new System.Drawing.Point(784, 46);
+            this.button7.Location = new System.Drawing.Point(798, 48);
             this.button7.Margin = new System.Windows.Forms.Padding(2);
             this.button7.Name = "button7";
             this.button7.Size = new System.Drawing.Size(44, 23);
@@ -278,7 +279,7 @@
             // 
             // panel1
             // 
-            this.panel1.Location = new System.Drawing.Point(2, 36);
+            this.panel1.Location = new System.Drawing.Point(9, 79);
             this.panel1.Margin = new System.Windows.Forms.Padding(2);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(929, 555);
@@ -305,7 +306,7 @@
             // 
             // progressBar1
             // 
-            this.progressBar1.Location = new System.Drawing.Point(659, 8);
+            this.progressBar1.Location = new System.Drawing.Point(603, 7);
             this.progressBar1.Margin = new System.Windows.Forms.Padding(2);
             this.progressBar1.Name = "progressBar1";
             this.progressBar1.Size = new System.Drawing.Size(97, 23);
@@ -314,7 +315,7 @@
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(629, 7);
+            this.label8.Location = new System.Drawing.Point(573, 6);
             this.label8.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(49, 15);
@@ -324,7 +325,7 @@
             // radioButton1
             // 
             this.radioButton1.AutoSize = true;
-            this.radioButton1.Location = new System.Drawing.Point(543, 10);
+            this.radioButton1.Location = new System.Drawing.Point(487, 9);
             this.radioButton1.Margin = new System.Windows.Forms.Padding(2);
             this.radioButton1.Name = "radioButton1";
             this.radioButton1.Size = new System.Drawing.Size(55, 19);
@@ -355,11 +356,23 @@
             this.notifyIcon1.Visible = true;
             this.notifyIcon1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.notifyIcon1_MouseDoubleClick);
             // 
+            // button9
+            // 
+            this.button9.Location = new System.Drawing.Point(784, 19);
+            this.button9.Margin = new System.Windows.Forms.Padding(2);
+            this.button9.Name = "button9";
+            this.button9.Size = new System.Drawing.Size(70, 23);
+            this.button9.TabIndex = 28;
+            this.button9.Text = "移除觀察";
+            this.button9.UseVisualStyleBackColor = true;
+            this.button9.Click += new System.EventHandler(this.button9_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(405, 39);
+            this.ClientSize = new System.Drawing.Size(853, 245);
+            this.Controls.Add(this.button9);
             this.Controls.Add(this.checkBox1);
             this.Controls.Add(this.radioButton1);
             this.Controls.Add(this.label8);
@@ -432,5 +445,6 @@
         private RadioButton radioButton1;
         private CheckBox checkBox1;
         private NotifyIcon notifyIcon1;
+        private Button button9;
     }
 }

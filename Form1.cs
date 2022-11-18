@@ -28,6 +28,7 @@ namespace Stock
         public Form1()
         {
             InitializeComponent();
+           
         }
         System.Timers.Timer watchTimer;
         const int m_watchTime = 3000;
@@ -55,12 +56,14 @@ namespace Stock
             notifyIcon1.ContextMenuStrip.Items.Add("輸入監測資料", null, button3_Click);
             notifyIcon1.ContextMenuStrip.Items.Add("關閉程式", null, MenuExit_Click);
 
-
+            AllocConsole();
             InitMessgaeToOFF();
             m_Progrss = "";
             m_countMsg = 0;
             m_AllMsg = false;
+
             radioButton1.Checked = false;
+
             //遮擋版開啟
             panel1.Visible = true;
 
@@ -94,14 +97,15 @@ namespace Stock
             this.Hide();
 
             m_StartAppTime = DateTime.Now.ToLocalTime();
-         
+
+            StartWatch();
         }
 
         string GetRunTime()
         {
             DateTime _now = DateTime.Now.ToLocalTime();
             TimeSpan ts = _now.Subtract(m_StartAppTime); //兩時間天數相減
-            return "運行時間 : " + ts.Days + "天 " + ts.Hours + "時" + ts.Minutes + "分" + ts.Seconds + "秒";
+            return " 目前運作時間  - " + ts.Days + "天 " + ts.Hours + "時" + ts.Minutes + "分" + ts.Seconds + "秒";
         }
 
         void Init_dic_UpdateData()
@@ -270,6 +274,7 @@ namespace Stock
         bool m_ShowMessage;
         void ShowMessage(string _str)
         {
+
             if (m_ShowMessage)
             {
                 Console.WriteLine("[" + DateTime.Now.ToLocalTime() + "]  " + _str);
@@ -278,10 +283,10 @@ namespace Stock
 
 
             m_Progrss += ".";
-            if (m_Progrss.Length >= 5)
+            if (m_Progrss.Length >= 720)
             {
                 m_Progrss = "";
-                Console.WriteLine("[" + DateTime.Now.ToLocalTime() + "]  " + GetRunTime());
+                Console.WriteLine("[" + DateTime.Now.ToLocalTime() + "]  運行中..");
             }
 
         }
@@ -492,7 +497,6 @@ namespace Stock
             watchTimer.AutoReset = true;
             watchTimer.Enabled = true;
             button2.Text = RUN_START;
-
         }
 
         bool m_WatchState;
@@ -538,10 +542,6 @@ namespace Stock
             //WatchByTest();
         }
 
-       
-
-
-
         /// <summary>
         /// 模擬RUN條
         /// </summary>
@@ -564,7 +564,7 @@ namespace Stock
             {
                 //大概每30分鐘廣播一次
                 m_countMsg = 1;
-                LineNotice.SendMessageToLineTake(_nowTime + " "+ GetRunTime());
+                LineNotice.SendMessageToLineTake( " "+ GetRunTime());
             }
 
 
@@ -614,7 +614,7 @@ namespace Stock
             {
                 //大概每30分鐘廣播一次
                 m_countMsg = 1;
-                LineNotice.SendMessageToLineTake(_nowTime + GetRunTime());
+                LineNotice.SendMessageToLineTake(GetRunTime());
             }
 
 
@@ -817,6 +817,29 @@ namespace Stock
 
         }
 
+        void ChangeWatchOrderState()
+        {
+            int _inputOrder = 0;
+            bool _isNumber = int.TryParse(textBox2.Text, out _inputOrder);
+            if (_isNumber)
+            {
+                if (DataModule.CheckWatchDB_HasData("單號", _inputOrder.ToString()))
+                {
+                    DataModule.UpdateWatchDB_ChangeWatchState(_inputOrder.ToString(), true);
+                }
+                else
+                {
+                    MessageBox.Show("更新失敗!");
+                }
+            }
+            else
+            {
+                MessageBox.Show("輸入的資料錯誤! 請填數字");
+            }
+         
+            
+        }
+
         void InitSelcetList()
         {
             comboBox1.Items.Add("目前監測類型");
@@ -892,22 +915,22 @@ namespace Stock
             textBox2.Text = "";
         }
 
+        const string SHOW_DETAIL_MESSAGE_OFF = "訊息OFF";
+        const string SHOW_DETAIL_MESSAGE_ON = "訊息ON";
+
         private void button1_Click(object sender, EventArgs e)
         {
-            if (button1.Text == "訊息OFF")
+            if (button1.Text == SHOW_DETAIL_MESSAGE_OFF)
             {
-                notifyIcon1.ContextMenuStrip.Items[1].Text = "訊息ON";
-                button1.Text = "訊息ON";
+                notifyIcon1.ContextMenuStrip.Items[1].Text = SHOW_DETAIL_MESSAGE_ON;
+                button1.Text = SHOW_DETAIL_MESSAGE_ON;
                 m_ShowMessage = true;
-                //開啟黑窗
-                AllocConsole();
             }
             else
             {
-                button1.Text = "訊息OFF";
-                notifyIcon1.ContextMenuStrip.Items[1].Text = "訊息OFF";
+                button1.Text = SHOW_DETAIL_MESSAGE_OFF;
+                notifyIcon1.ContextMenuStrip.Items[1].Text = SHOW_DETAIL_MESSAGE_OFF;
                 m_ShowMessage = false;
-                FreeConsole();
             }
         }
 
@@ -950,6 +973,11 @@ namespace Stock
             this.Show();
             notifyIcon1.Visible = false;
             WindowState = FormWindowState.Normal;
+        }
+
+        private void button9_Click(object sender, EventArgs e)
+        {
+            ChangeWatchOrderState();
         }
     }
 }
