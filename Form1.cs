@@ -46,6 +46,12 @@ namespace Stock
         {
             Application.Exit();
         }
+        void MenuOpenWindow_Click(object sender, EventArgs e)
+        {
+            this.Show();
+            notifyIcon1.Visible = false;
+            WindowState = FormWindowState.Normal;
+        }
 
         private void Form1_Load(object sender, EventArgs e)
         {
@@ -54,14 +60,16 @@ namespace Stock
             notifyIcon1.ContextMenuStrip.Items.Add("執行", null, button2_Click);
             notifyIcon1.ContextMenuStrip.Items.Add("訊息OFF", null, button1_Click);
             notifyIcon1.ContextMenuStrip.Items.Add("輸入監測資料", null, button3_Click);
+            notifyIcon1.ContextMenuStrip.Items.Add("開啟畫面", null, MenuOpenWindow_Click);
             notifyIcon1.ContextMenuStrip.Items.Add("關閉程式", null, MenuExit_Click);
+
 
             AllocConsole();
             InitMessgaeToOFF();
             m_Progrss = "";
             m_countMsg = 0;
             m_AllMsg = false;
-
+            ShowMessage("開始初始化...",false);
             radioButton1.Checked = false;
 
             //遮擋版開啟
@@ -99,6 +107,7 @@ namespace Stock
             m_StartAppTime = DateTime.Now.ToLocalTime();
 
             StartWatch();
+            ShowMessage("初始化完成!",false);
         }
 
         string GetRunTime()
@@ -272,10 +281,16 @@ namespace Stock
         }
 
         bool m_ShowMessage;
-        void ShowMessage(string _str)
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="_str"></param>
+        /// <param name="iIsBeControll">是否受到顯示訊息 限制</param>
+        void ShowMessage(string _str, bool iIsBeControll = true)
         {
 
-            if (m_ShowMessage)
+            if (m_ShowMessage || iIsBeControll == false)
             {
                 Console.WriteLine("[" + DateTime.Now.ToLocalTime() + "]  " + _str);
                 return;
@@ -936,15 +951,7 @@ namespace Stock
 
         private void button8_Click(object sender, EventArgs e)
         {
-            if (textBox3.Text == "653214")
-            {
-                panel1.Visible = false;
-            }
-            else
-            {
-                panel1.Visible = true;
-            }
-            textBox3.Text = "";
+            MessageBox.Show("目前無功能!");
         }
 
         private void radioButton1_CheckedChanged(object sender, EventArgs e)
@@ -978,6 +985,29 @@ namespace Stock
         private void button9_Click(object sender, EventArgs e)
         {
             ChangeWatchOrderState();
+        }
+
+        private void textBox3_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                if (textBox3.Text == "653214")
+                {
+                    panel1.Visible = false;
+                }
+                else
+                {
+                    panel1.Visible = true;
+                    label9.Text = "輸入錯誤!";
+                }
+              
+            }
+        }
+
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            LineNotice.SendMessageToLineTake("已關閉監測程式...");
+
         }
     }
 }
