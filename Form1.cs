@@ -57,7 +57,7 @@ namespace Stock
         {
             //m_notifyIconList = new List<string>();
             notifyIcon1.ContextMenuStrip = new ContextMenuStrip();
-            notifyIcon1.ContextMenuStrip.Items.Add("執行", null, button2_Click);
+            notifyIcon1.ContextMenuStrip.Items.Add(RUN_START, null, button2_Click);
             notifyIcon1.ContextMenuStrip.Items.Add("訊息OFF", null, button1_Click);
             notifyIcon1.ContextMenuStrip.Items.Add("輸入監測資料", null, button3_Click);
             notifyIcon1.ContextMenuStrip.Items.Add("開啟畫面", null, MenuOpenWindow_Click);
@@ -108,6 +108,8 @@ namespace Stock
 
             StartWatch();
             ShowMessage("初始化完成!",false);
+
+            GetNowStockData();
         }
 
         string GetRunTime()
@@ -464,6 +466,12 @@ namespace Stock
         }
         delegate void SetTextCallBack(string iStr, string iStr2);
 
+        /// <summary>
+        /// 每張的價錢
+        /// </summary>
+        const float m_OneStockPrice = 1000;
+
+
         void UpdateText(string istr, string istr2)
         {
             label6.Text = "目前(帳上)損益 : " + istr.ToString();
@@ -481,12 +489,12 @@ namespace Stock
                 if (row["動作"].ToString() == "賣" && (bool)row["完成交易"] == true)
                 {
                     //已經結算的 算是歷史損益
-                    _v += float.Parse(row["損益"].ToString());
+                    _v += float.Parse(row["損益"].ToString())* m_OneStockPrice;
                 }
                 if (row["動作"].ToString() == "買" && (bool)row["完成交易"] == false)
                 {
                     //尚未結算的 目前在單的
-                    _2 += float.Parse(row["損益"].ToString());
+                    _2 += float.Parse(row["損益"].ToString())* m_OneStockPrice;
                 }
             }
 
@@ -587,30 +595,34 @@ namespace Stock
             {
                 if (_nowTime.Hour >= 9 && _nowTime.Hour <= 14)
                 {
-                    if (_nowTime.Hour >= 13 && _nowTime.Minute >= 31)
+                    if (_nowTime.Hour >= 13 && _nowTime.Minute >= 35 || (_nowTime.Hour == 14))
                     {
                         return;
                     }
-
-                    string url = "https://mis.twse.com.tw/stock/api/getStockInfo.jsp";
-                    url += "?json=1&delay=0&ex_ch=" + m_WatchStr;
-                    string downloadedData = "";
-                    using (WebClient wClient = new WebClient())
-                    {
-                        // 取得網頁資料
-                        wClient.Encoding = Encoding.UTF8;
-                        downloadedData = wClient.DownloadString(url);
-                        if (downloadedData.Trim().Length > 0)
-                        {
-                            ParseStockData(downloadedData);
-                            UpdateWatchGridView();
-                        }
-                    }
-
+                    GetNowStockData();
                 }
             }
 
         }
+
+        void GetNowStockData()
+        {
+            string url = "https://mis.twse.com.tw/stock/api/getStockInfo.jsp";
+            url += "?json=1&delay=0&ex_ch=" + m_WatchStr;
+            string downloadedData = "";
+            using (WebClient wClient = new WebClient())
+            {
+                // 取得網頁資料
+                wClient.Encoding = Encoding.UTF8;
+                downloadedData = wClient.DownloadString(url);
+                if (downloadedData.Trim().Length > 0)
+                {
+                    ParseStockData(downloadedData);
+                    UpdateWatchGridView();
+                }
+            }
+        }
+
 
         /// <summary>
         /// 循環執行(開發測試用)
@@ -631,23 +643,7 @@ namespace Stock
                 m_countMsg = 1;
                 LineNotice.SendMessageToLineTake(GetRunTime());
             }
-
-
-            string url = "https://mis.twse.com.tw/stock/api/getStockInfo.jsp";
-            url += "?json=1&delay=0&ex_ch=" + m_WatchStr;
-            string downloadedData = "";
-            using (WebClient wClient = new WebClient())
-            {
-                // 取得網頁資料
-                wClient.Encoding = Encoding.UTF8;
-                downloadedData = wClient.DownloadString(url);
-                if (downloadedData.Trim().Length > 0)
-                {
-                    ParseStockData(downloadedData);
-                    UpdateWatchGridView();
-                }
-            }
-
+            GetNowStockData();
         }
 
        
@@ -994,6 +990,7 @@ namespace Stock
                 if (textBox3.Text == "653214")
                 {
                     panel1.Visible = false;
+                    textBox3.Text = "";
                 }
                 else
                 {
